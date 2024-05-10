@@ -29,7 +29,6 @@ public class DancerMemoryRepo {
         System.out.println("dancerList = " + dancerList);
         return true;
 
-
     }
 
     // 댄서리스트를 반환하는 기능
