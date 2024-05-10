@@ -1,10 +1,12 @@
 package com.jsp.repository;
 
+import com.jsp.chap05.Person;
 import com.jsp.entity.Dancer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +62,47 @@ public class DancerJdbcRepo {
 
     // 댄서리스트를 반환하는 기능
     public List<Dancer> retrieve() {
-        return null;
+
+        try (Connection conn = DriverManager.getConnection(url, username, password)) {
+
+            Class.forName(driverClassName);
+
+            String sql = "SELECT * FROM tbl_dancer";
+
+            // SQL 실행 객체 생성
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            // ? 채우기
+
+            // 실행 명령 - SELECT는 다른 메서드를 사용
+            // ResultSet : SELECT의 결과집합 표를 가져옴
+            ResultSet rs = pstmt.executeQuery();
+
+            // ResultSet 데이터 가져오기
+            List<Dancer> dancers = new ArrayList<>();
+            while (rs.next()) {
+                // 커서가 가리키는 행의 데이터를 하나씩 추출
+                int id = rs.getInt("id");
+                String dancerName = rs.getString("name");
+                String crewName = rs.getString("crew_name");
+                String danceLevel = rs.getString("dance_level");
+
+                Dancer dancer = new Dancer();
+                dancer.setName(dancerName);
+                dancer.setCrewName(crewName);
+                dancer.setDanceLevel(Dancer.DanceLevel.valueOf(danceLevel));
+
+                dancers.add(dancer);
+
+                System.out.println(dancer);
+            }
+            return dancers;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
 }
