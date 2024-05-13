@@ -88,6 +88,7 @@ public class DancerJdbcRepo {
                 String danceLevel = rs.getString("dance_level");
 
                 Dancer dancer = new Dancer();
+                dancer.setId(id);
                 dancer.setName(dancerName);
                 dancer.setCrewName(crewName);
                 dancer.setDanceLevel(Dancer.DanceLevel.valueOf(danceLevel));
@@ -105,4 +106,22 @@ public class DancerJdbcRepo {
 
     }
 
+    public void delete(String id) {
+
+        try (Connection conn = DriverManager.getConnection(url, username, password)){
+
+            Class.forName(driverClassName);
+
+            String sql = "DELETE FROM tbl_dancer WHERE id = ?";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1,id);
+
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+        }
+    }
 }
